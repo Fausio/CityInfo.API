@@ -18,4 +18,14 @@
     <ProjectReference Include="..\CityInfo.DATA\CityInfo.DATA.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Files\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Files\CSI Pictorial Version-beta.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
