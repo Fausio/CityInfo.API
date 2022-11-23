@@ -1,5 +1,6 @@
 ﻿using CityInfo.DATA;
 using CityInfo.DOMAIN.DTOs;
+using CityInfo.DOMAIN.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,7 +11,7 @@ namespace CityInfo.API.Controllers
     public class PointsOfInteresController : ControllerBase
     {
         [HttpGet]
-        public ActionResult<IEnumerable<PointsOfInterestDTO>> Read(int CityId)
+        public ActionResult<IEnumerable<PointsOfInterestCreateDTO>> Read(int CityId)
         {
             CityDTO result = CitiesDataStore.Instance.Cities.FirstOrDefault(x => x.Id == CityId);
             if (result is null)
@@ -21,8 +22,8 @@ namespace CityInfo.API.Controllers
             return Ok(result.PointsOfInterests);
         }
 
-        [HttpGet("{PointOfInterestId}")]
-        public ActionResult<PointsOfInterestDTO> Read(int CityId,int PointOfInterestId)
+        [HttpGet("{PointOfInterestId}", Name = "ReadPointOfInterest")]
+        public ActionResult<PointsOfInterest> Read(int CityId, int PointOfInterestId)
         {
             CityDTO CityIdresult = CitiesDataStore.Instance.Cities.FirstOrDefault(x => x.Id == CityId);
             if (CityIdresult is null)
@@ -37,6 +38,31 @@ namespace CityInfo.API.Controllers
             }
 
             return Ok(result);
+        }
+
+        [HttpPost]
+        public ActionResult  Create(int CityId, [FromBody]  PointsOfInterestCreateDTO pointsOfInterestCreate)
+        {
+            CityDTO CityIdresult = CitiesDataStore.Instance.Cities.FirstOrDefault(x => x.Id == CityId);
+            if (CityIdresult is null)
+            {
+                return NotFound("City NotFound");
+            }
+
+            var NewpointsOfInterestCreate = new PointsOfInterest()
+            {
+                Id = CitiesDataStore.Instance.Cities.SelectMany(points => points.PointsOfInterests).Max(p => p.Id) + 1,
+                Name = pointsOfInterestCreate.Name,
+                Description = pointsOfInterestCreate.Description
+            };
+
+            CityIdresult.PointsOfInterests.Add(NewpointsOfInterestCreate);
+
+            return CreatedAtRoute("ReadPointOfInterest", new
+            {
+                CityId = CityIdresult.Id,
+                PointOfInterestId = NewpointsOfInterestCreate.Id
+            }, NewpointsOfInterestCreate);
         }
     }
 }

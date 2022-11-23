@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CityInfo.DOMAIN.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,6 @@ namespace CityInfo.DOMAIN.DTOs
         public string? Description { get; set; }
         public int NumberOfPointsOfInterest { get { return PointsOfInterests.Count; } }
 
-        public ICollection<PointsOfInterestDTO> PointsOfInterests { get; set; } = new List<PointsOfInterestDTO>();
+        public ICollection<PointsOfInterest> PointsOfInterests { get; set; } = new List<PointsOfInterest>();
     }
 }
