@@ -9,18 +9,22 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-//// Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
-//    app.UseSwagger();
-//    app.UseSwaggerUI();
-//}
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
-//app.UseAuthorization();
+app.UseRouting();
 
-//app.MapControllers(); 
-app.Run( async (x) => { await x.Response.WriteAsync("Hello world"); });
+app.UseAuthorization();
+
+app.UseEndpoints(endpoints => endpoints.MapControllers());
+
+app.MapControllers();
+
 app.Run();
-//
+ 
