@@ -1,4 +1,5 @@
 ﻿using CityInfo.DATA;
+using CityInfo.DOMAIN.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CityInfo.API.Controllers
@@ -9,15 +10,25 @@ namespace CityInfo.API.Controllers
     {
 
         [HttpGet]
-        public JsonResult Read()
+        public ActionResult<IEnumerable<CityDTO>> Read()
         {
-            return new JsonResult(CitiesDataStore.Instance.Cities);
+            IEnumerable<CityDTO> result = CitiesDataStore.Instance.Cities;
+            return Ok(result);
         }
 
         [HttpGet("{Id}")]
-        public JsonResult Read(int Id)
+        public ActionResult<CityDTO> Read(int Id)
         {
-            return new JsonResult(CitiesDataStore.Instance.Cities.FirstOrDefault(x => x.Id == Id));
+
+            CityDTO result = CitiesDataStore.Instance.Cities.FirstOrDefault(x => x.Id == Id);
+
+            if (result is null)
+            {
+                return NotFound();
+            }
+
+
+            return Ok(result);
         }
     }
 }

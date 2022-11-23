@@ -16,19 +16,52 @@ namespace CityInfo.DATA
                 {
                     Id = 1,
                     Name ="Maputo",
-                    Description ="Cidade das acacias"
+                    Description ="Cidade das acacias",
+                    PointsOfInterests =    new List<PointsOfInterestDTO>()
+                   {
+                        new PointsOfInterestDTO()
+                        {
+                            Id=3,
+                            Name ="Shoping Center",
+                            Description ="Maior Shopping do pais até 2010"
+                        }
+                   }
                 },
                 new CityDTO()
                             {
                                 Id = 2,
                                 Name ="Matola",
-                                Description ="Privincia de Maputo"
+                                Description ="Privincia de Maputo",
+                                PointsOfInterests =    new List<PointsOfInterestDTO>()
+                                {
+                                     new PointsOfInterestDTO()
+                                     {
+                                         Id=1,
+                                         Name ="Cinema Lusumundo",
+                                         Description ="Jardim da Matola"
+                                     }, new PointsOfInterestDTO()
+                                     {
+                                         Id=2,
+                                         Name ="Santorine",
+                                         Description ="Restourante e Bar"
+                                     },
+                                }
+
                             },
                 new CityDTO()
                             {
                                 Id = 3,
                                 Name ="Boane",
-                                Description ="Cidade das Cabras 🐐"
+                                Description ="Cidade das Cabras 🐐",
+                                 PointsOfInterests =    new List<PointsOfInterestDTO>()
+                                {
+                                     new PointsOfInterestDTO()
+                                     {
+                                         Id=3,
+                                         Name ="Banana Landia",
+                                         Description ="Pomar de Banana"
+                                     }
+                                }
                             }
             };
         }
