@@ -2,6 +2,7 @@
 using CityInfo.DOMAIN.DTOs;
 using CityInfo.DOMAIN.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CityInfo.API.Controllers
@@ -93,5 +94,47 @@ namespace CityInfo.API.Controllers
 
             return NoContent();
         }
+
+        [HttpPatch("{PointOfInterestId}")]
+        public ActionResult UpdatePartial(int CityId, 
+            int PointOfInterestId, 
+            JsonPatchDocument<PointsOfInterestUpdateDTO> pointsOfInterestUpdate)
+        {
+            CityDTO CityIdresult = CitiesDataStore.Instance.Cities.FirstOrDefault(x => x.Id == CityId);
+            if (CityIdresult is null)
+            {
+                return NotFound("City NotFound");
+            } 
+
+            var result = CityIdresult.PointsOfInterests.FirstOrDefault(x => x.Id == PointOfInterestId);
+            if (result is null)
+            {
+                return NotFound("PointsOfInterests NotFound");
+            }
+
+            var modelPatch = new PointsOfInterestUpdateDTO
+            {
+                Name = result.Name,
+                Description = result.Description
+            };
+
+            pointsOfInterestUpdate.ApplyTo(modelPatch, ModelState);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!TryValidateModel(modelPatch))
+            {
+                return BadRequest(ModelState);
+            }
+
+            result.Name = modelPatch.Name;
+            result.Description = modelPatch.Description;
+             
+            return NoContent();
+        }
+
     }
 }
