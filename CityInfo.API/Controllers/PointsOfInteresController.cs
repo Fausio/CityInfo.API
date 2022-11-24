@@ -41,12 +41,18 @@ namespace CityInfo.API.Controllers
         }
 
         [HttpPost]
-        public ActionResult  Create(int CityId, [FromBody]  PointsOfInterestCreateDTO pointsOfInterestCreate)
+        public ActionResult  Create(int CityId, [FromBody] PointsOfInterestCreateDTO pointsOfInterestCreate)
         {
             CityDTO CityIdresult = CitiesDataStore.Instance.Cities.FirstOrDefault(x => x.Id == CityId);
             if (CityIdresult is null)
             {
                 return NotFound("City NotFound");
+            }
+
+          
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("ModelState is not IsValid");
             }
 
             var NewpointsOfInterestCreate = new PointsOfInterest()
