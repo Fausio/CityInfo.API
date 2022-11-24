@@ -42,7 +42,7 @@ namespace CityInfo.API.Controllers
         }
 
         [HttpPost]
-        public ActionResult  Create(int CityId, [FromBody] PointsOfInterestCreateDTO pointsOfInterestCreate)
+        public ActionResult Create(int CityId, [FromBody] PointsOfInterestCreateDTO pointsOfInterestCreate)
         {
             CityDTO CityIdresult = CitiesDataStore.Instance.Cities.FirstOrDefault(x => x.Id == CityId);
             if (CityIdresult is null)
@@ -50,7 +50,7 @@ namespace CityInfo.API.Controllers
                 return NotFound("City NotFound");
             }
 
-          
+
             if (!ModelState.IsValid)
             {
                 return BadRequest("ModelState is not IsValid");
@@ -74,7 +74,7 @@ namespace CityInfo.API.Controllers
 
 
         [HttpPut("{PointOfInterestId}")]
-        public ActionResult Update(int CityId,  int PointOfInterestId, PointsOfInterestUpdateDTO pointsOfInterestUpdate)
+        public ActionResult Update(int CityId, int PointOfInterestId, PointsOfInterestUpdateDTO pointsOfInterestUpdate)
         {
             CityDTO CityIdresult = CitiesDataStore.Instance.Cities.FirstOrDefault(x => x.Id == CityId);
             if (CityIdresult is null)
@@ -96,15 +96,15 @@ namespace CityInfo.API.Controllers
         }
 
         [HttpPatch("{PointOfInterestId}")]
-        public ActionResult UpdatePartial(int CityId, 
-            int PointOfInterestId, 
+        public ActionResult UpdatePartial(int CityId,
+            int PointOfInterestId,
             JsonPatchDocument<PointsOfInterestUpdateDTO> pointsOfInterestUpdate)
         {
             CityDTO CityIdresult = CitiesDataStore.Instance.Cities.FirstOrDefault(x => x.Id == CityId);
             if (CityIdresult is null)
             {
                 return NotFound("City NotFound");
-            } 
+            }
 
             var result = CityIdresult.PointsOfInterests.FirstOrDefault(x => x.Id == PointOfInterestId);
             if (result is null)
@@ -132,7 +132,26 @@ namespace CityInfo.API.Controllers
 
             result.Name = modelPatch.Name;
             result.Description = modelPatch.Description;
-             
+
+            return NoContent();
+        }
+
+        [HttpDelete("{PointOfInterestId}")]
+        public ActionResult Delete(int CityId, int PointOfInterestId)
+        {
+            CityDTO CityIdresult = CitiesDataStore.Instance.Cities.FirstOrDefault(x => x.Id == CityId);
+            if (CityIdresult is null)
+            {
+                return NotFound("City NotFound");
+            }
+
+            var result = CityIdresult.PointsOfInterests.FirstOrDefault(x => x.Id == PointOfInterestId);
+            if (result is null)
+            {
+                return NotFound("PointsOfInterests NotFound");
+            }
+
+            CityIdresult.PointsOfInterests.Remove(result);
             return NoContent();
         }
 
