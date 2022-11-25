@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace CityInfo.DOMAIN.Models
 {
-    [Table("PointsOfInterest")]
-    public class PointsOfInterest
+    [Table("City")]
+    public class City
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -17,17 +17,15 @@ namespace CityInfo.DOMAIN.Models
 
         [Required]
         [MaxLength(50)]
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; set; }
+
         [MaxLength(200)]
         public string? Description { get; set; }
+        public ICollection<PointsOfInterest> PointsOfInterests { get; set; } = new List<PointsOfInterest>();
 
-        [ForeignKey("CityId")]
-        public City? City { get; set; }
-        public int  CityId { get; set; }
-
-        public PointsOfInterest(string name)
+        public City(string name)
         {
-            this.Name = name;
+            Name = name;
         }
     }
 }

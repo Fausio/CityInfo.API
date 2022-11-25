@@ -1,3 +1,4 @@
+using CityInfo.DATA.DbContext;
 using CityInfo.SERVICE.Interfaces;
 using CityInfo.SERVICE.Services;
 using Microsoft.AspNetCore.StaticFiles;
@@ -25,7 +26,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 
-
+builder.Services.AddDbContext<AppDbContext>();
 
 #if DEBUG
 builder.Services.AddTransient<IMailServices, LocalMailServices>();

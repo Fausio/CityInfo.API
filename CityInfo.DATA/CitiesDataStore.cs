@@ -18,9 +18,9 @@ namespace CityInfo.DATA
                     Id = 1,
                     Name ="Maputo",
                     Description ="Cidade das acacias",
-                    PointsOfInterests =    new List<PointsOfInterest>()
+                    PointsOfInterests =    new List<PointsOfInterestDTO>()
                    {
-                        new PointsOfInterest()
+                        new PointsOfInterestDTO()
                         {
                             Id=3,
                             Name ="Shoping Center",
@@ -33,14 +33,14 @@ namespace CityInfo.DATA
                                 Id = 2,
                                 Name ="Matola",
                                 Description ="Privincia de Maputo",
-                                PointsOfInterests =    new List<PointsOfInterest>()
+                                PointsOfInterests =    new List<PointsOfInterestDTO>()
                                 {
-                                     new PointsOfInterest()
+                                     new PointsOfInterestDTO()
                                      {
                                          Id=1,
                                          Name ="Cinema Lusumundo",
                                          Description ="Jardim da Matola"
-                                     }, new PointsOfInterest()
+                                     }, new PointsOfInterestDTO()
                                      {
                                          Id=2,
                                          Name ="Santorine",
@@ -54,9 +54,9 @@ namespace CityInfo.DATA
                                 Id = 3,
                                 Name ="Boane",
                                 Description ="Cidade das Cabras 🐐",
-                                 PointsOfInterests =    new List<PointsOfInterest>()
+                                 PointsOfInterests =    new List<PointsOfInterestDTO>()
                                 {
-                                     new PointsOfInterest()
+                                     new PointsOfInterestDTO()
                                      {
                                          Id=3,
                                          Name ="Banana Landia",

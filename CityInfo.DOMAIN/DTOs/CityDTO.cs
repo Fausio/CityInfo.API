@@ -14,6 +14,6 @@ namespace CityInfo.DOMAIN.DTOs
         public string? Description { get; set; }
         public int NumberOfPointsOfInterest { get { return PointsOfInterests.Count; } }
 
-        public ICollection<PointsOfInterest> PointsOfInterests { get; set; } = new List<PointsOfInterest>();
+        public ICollection<PointsOfInterestDTO> PointsOfInterests { get; set; } = new List<PointsOfInterestDTO>();
     }
 }
