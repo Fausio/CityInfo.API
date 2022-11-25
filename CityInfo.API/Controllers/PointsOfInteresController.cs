@@ -11,16 +11,37 @@ namespace CityInfo.API.Controllers
     [ApiController]
     public class PointsOfInteresController : ControllerBase
     {
+        private readonly ILogger<PointsOfInteresController> _logger;
+
+        public PointsOfInteresController(ILogger<PointsOfInteresController> logger)
+        {
+            this._logger = logger ?? throw new ArgumentException(null, nameof(logger));
+         
+            // get direct from container
+            //   HttpContext.RequestServices.GetService
+        }
+
         [HttpGet]
         public ActionResult<IEnumerable<PointsOfInterestCreateDTO>> Read(int CityId)
-        {
-            CityDTO result = CitiesDataStore.Instance.Cities.FirstOrDefault(x => x.Id == CityId);
-            if (result is null)
+        { 
+            try
             {
-                return NotFound();
-            }
+                throw new Exception($" found");
 
-            return Ok(result.PointsOfInterests);
+                CityDTO result = CitiesDataStore.Instance.Cities.FirstOrDefault(x => x.Id == CityId);
+                if (result is null)
+                {
+                    throw new Exception(); 
+                }
+
+                return Ok(result.PointsOfInterests);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical($"City with id {CityId}, wasn't found when accessing points of interest.",ex);
+                return StatusCode(500, "An error occurred at the server level");
+            }
+            
         }
 
         [HttpGet("{PointOfInterestId}", Name = "ReadPointOfInterest")]
