@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CityInfo.DATA\CityInfo.DATA.csproj" />
+    <ProjectReference Include="..\CityInfo.SERVICE\CityInfo.SERVICE.csproj" />
   </ItemGroup>
 
   <ItemGroup>

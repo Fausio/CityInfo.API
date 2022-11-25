@@ -1,3 +1,5 @@
+using CityInfo.SERVICE.Interfaces;
+using CityInfo.SERVICE.Services;
 using Microsoft.AspNetCore.StaticFiles;
 using Serilog;
 
@@ -20,7 +22,16 @@ builder.Host.UseSerilog();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
+
+
+
+#if DEBUG
+builder.Services.AddTransient<IMailServices, LocalMailServices>();
+#else   
+builder.Services.AddTransient<IMailServices, CloudMailServices>();
+#endif
 
 var app = builder.Build();
 

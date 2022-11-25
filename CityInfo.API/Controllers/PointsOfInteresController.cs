@@ -1,6 +1,7 @@
 ﻿using CityInfo.DATA;
 using CityInfo.DOMAIN.DTOs;
 using CityInfo.DOMAIN.Models;
+using CityInfo.SERVICE.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -12,18 +13,21 @@ namespace CityInfo.API.Controllers
     public class PointsOfInteresController : ControllerBase
     {
         private readonly ILogger<PointsOfInteresController> _logger;
+        private readonly IMailServices _mailServices;
 
-        public PointsOfInteresController(ILogger<PointsOfInteresController> logger)
+        public PointsOfInteresController(ILogger<PointsOfInteresController> logger,
+                                         IMailServices mailServices)
         {
             this._logger = logger ?? throw new ArgumentException(null, nameof(logger));
-         
+            this._mailServices = mailServices ?? throw new ArgumentException(null, nameof(logger));
+
             // get direct from container
             //   HttpContext.RequestServices.GetService
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<PointsOfInterestCreateDTO>> Read(int CityId)
-        { 
+        {
             try
             {
                 throw new Exception($" found");
@@ -31,17 +35,17 @@ namespace CityInfo.API.Controllers
                 CityDTO result = CitiesDataStore.Instance.Cities.FirstOrDefault(x => x.Id == CityId);
                 if (result is null)
                 {
-                    throw new Exception(); 
+                    throw new Exception();
                 }
 
                 return Ok(result.PointsOfInterests);
             }
             catch (Exception ex)
             {
-                _logger.LogCritical($"City with id {CityId}, wasn't found when accessing points of interest.",ex);
+                _logger.LogCritical($"City with id {CityId}, wasn't found when accessing points of interest.", ex);
                 return StatusCode(500, "An error occurred at the server level");
             }
-            
+
         }
 
         [HttpGet("{PointOfInterestId}", Name = "ReadPointOfInterest")]
@@ -173,6 +177,7 @@ namespace CityInfo.API.Controllers
             }
 
             CityIdresult.PointsOfInterests.Remove(result);
+            _mailServices.Send("Deleted PointOfInterest", $"Point of interest with id {PointOfInterestId} From city with id {CityIdresult.Id} was deleted");
             return NoContent();
         }
 
