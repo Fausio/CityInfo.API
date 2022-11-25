@@ -2,6 +2,7 @@ using CityInfo.DATA.DbContext;
 using CityInfo.SERVICE.Interfaces;
 using CityInfo.SERVICE.Services;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,7 +27,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 
-builder.Services.AddDbContext<AppDbContext>();
+builder.Services.AddDbContext<AppDbContext>( dbContextOptions => dbContextOptions.UseSqlite("Data Source = CityInfo.db"));
 
 #if DEBUG
 builder.Services.AddTransient<IMailServices, LocalMailServices>();
