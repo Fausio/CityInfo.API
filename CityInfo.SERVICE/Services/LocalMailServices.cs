@@ -1,4 +1,5 @@
 ﻿using CityInfo.SERVICE.Interfaces;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,15 @@ namespace CityInfo.SERVICE.Services
 {
     public class LocalMailServices : IMailServices
     {
-        private readonly string _mailTo = "fausioluis@live.com";
-        private readonly string _mailFrom = "noreply@mycompany.com";
+        private readonly string _mailFrom = string.Empty;
+        private readonly string _mailTo = string.Empty;
 
+        public LocalMailServices(IConfiguration configuration)
+        {
+
+            _mailFrom = configuration["SendMailConfig:MailFrom"];
+            _mailTo = configuration["SendMailConfig:MailTo"];
+        }
 
         public void Send(string subject, string msg)
         {
