@@ -27,13 +27,20 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 
-builder.Services.AddDbContext<AppDbContext>( dbContextOptions => dbContextOptions.UseSqlite("Data Source = CityInfo.db"));
 
 #if DEBUG
 builder.Services.AddTransient<IMailServices, LocalMailServices>();
 #else   
 builder.Services.AddTransient<IMailServices, CloudMailServices>();
 #endif
+
+
+//builder.Services.AddDbContext<AppDbContext>( dbContextOptions => dbContextOptions.UseSqlite("Data Source=CityInfo.db"));
+using (var db = new AppDbContext())
+{
+    //db.Database.EnsureCreated(); Don't use
+    db.Database.Migrate();
+}
 
 var app = builder.Build();
 
