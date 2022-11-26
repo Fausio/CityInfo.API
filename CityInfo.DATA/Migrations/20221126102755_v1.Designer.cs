@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CityInfo.DATA.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20221125151823_v1")]
+    [Migration("20221126102755_v1")]
     partial class v1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,6 +36,26 @@ namespace CityInfo.DATA.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("City");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Cidade das acacias",
+                            Name = "Maputo"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Privincia de Maputo",
+                            Name = "Matola"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Cidade das Cabras 🐐",
+                            Name = "Boane"
+                        });
                 });
 
             modelBuilder.Entity("CityInfo.DOMAIN.Models.PointsOfInterest", b =>
@@ -61,6 +81,36 @@ namespace CityInfo.DATA.Migrations
                     b.HasIndex("CityId");
 
                     b.ToTable("PointsOfInterest");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 3,
+                            CityId = 1,
+                            Description = "Maior Shopping do pais até 2010",
+                            Name = "Shoping Center"
+                        },
+                        new
+                        {
+                            Id = 1,
+                            CityId = 2,
+                            Description = "Jardim da Matola",
+                            Name = "Cinema Lusumundo"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CityId = 2,
+                            Description = "Restourante e Bar",
+                            Name = "Santorine"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CityId = 3,
+                            Description = "Pomar de Banana",
+                            Name = "Banana Landia"
+                        });
                 });
 
             modelBuilder.Entity("CityInfo.DOMAIN.Models.PointsOfInterest", b =>

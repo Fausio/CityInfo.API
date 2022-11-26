@@ -73,7 +73,7 @@ namespace CityInfo.API.Controllers
 
 
         [HttpPut("{PointOfInterestId}")]
-        public ActionResult Update(int CityId, [FromBody] int pointsOfInterestId, PointsOfInterestÙpdateDTO pointsOfInterestUpdate)
+        public ActionResult Update(int CityId, int pointsOfInterestId, PointsOfInterestÙpdateDTO pointsOfInterestUpdate)
         {
             CityDTO CityIdresult = CitiesDataStore.Instance.Cities.FirstOrDefault(x => x.Id == CityId);
             if (CityIdresult is null)

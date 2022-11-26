@@ -30,17 +30,19 @@ builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 
 #if DEBUG
 builder.Services.AddTransient<IMailServices, LocalMailServices>();
-#else   
+#else
 builder.Services.AddTransient<IMailServices, CloudMailServices>();
 #endif
+ 
 
-
-//builder.Services.AddDbContext<AppDbContext>( dbContextOptions => dbContextOptions.UseSqlite("Data Source=CityInfo.db"));
-using (var db = new AppDbContext())
-{
-    //db.Database.EnsureCreated(); Don't use
-    db.Database.Migrate();
-}
+// get value from appSetting
+var SQLiteConnectionStrings = builder.Configuration["ConnectionStrings:SQLite"];
+builder.Services.AddDbContext<AppDbContext>( dbContextOptions => dbContextOptions.UseSqlite(SQLiteConnectionStrings));
+//using (var db = new AppDbContext(new DbContextOptions<AppDbContext>()))
+//{
+//    //db.Database.EnsureCreated(); Don't use
+//    db.Database.Migrate();
+//}
 
 var app = builder.Build();
 
