@@ -1,6 +1,7 @@
 ﻿using CityInfo.DATA;
 using CityInfo.DOMAIN.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using CityInfo.SERVICE.Repository.Interfaces;
 
 namespace CityInfo.API.Controllers
 {
@@ -8,12 +9,31 @@ namespace CityInfo.API.Controllers
     [Route("api/Cities")]
     public class CitiesController : ControllerBase
     {
+        private readonly ICityRepository _cityRepository;
+        public CitiesController(ICityRepository cityRepository)
+        {
+            this._cityRepository = cityRepository ?? throw new ArgumentNullException(nameof(ICityRepository));
+        }
 
         [HttpGet]
-        public ActionResult<IEnumerable<CityDTO>> Read()
+        public async Task<ActionResult<IEnumerable<CityDTOWithoutPointsOfInterest>>> Read()
         {
-            IEnumerable<CityDTO> result = CitiesDataStore.Instance.Cities;
-            return Ok(result);
+            var result = await _cityRepository.Read();
+            var resultTDTO = new List<CityDTOWithoutPointsOfInterest>();
+
+            if (result.Any())
+            {
+                resultTDTO.AddRange(
+                                      result.Select(city => new CityDTOWithoutPointsOfInterest()
+                                      {
+                                          Id = city.Id,
+                                          Name = city.Name,
+                                          Description = city.Description
+                                      })
+                                    );
+            }
+             
+            return Ok(resultTDTO);
         }
 
         [HttpGet("{Id}")]
