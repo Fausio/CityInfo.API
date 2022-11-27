@@ -1,5 +1,7 @@
 using CityInfo.DATA.DbContext;
 using CityInfo.SERVICE.Interfaces;
+using CityInfo.SERVICE.Repository.Interfaces;
+using CityInfo.SERVICE.Repository.Services;
 using CityInfo.SERVICE.Services;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
@@ -33,7 +35,9 @@ builder.Services.AddTransient<IMailServices, LocalMailServices>();
 #else
 builder.Services.AddTransient<IMailServices, CloudMailServices>();
 #endif
- 
+
+builder.Services.AddScoped<ICityRepository, CityRepository>();
+
 
 // get value from appSetting
 var SQLiteConnectionStrings = builder.Configuration["ConnectionStrings:SQLite"];

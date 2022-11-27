@@ -10,6 +10,10 @@ namespace CityInfo.SERVICE.Repository.Interfaces
     public interface ICityRepository
     {
         // IQueryable: you can order by, make where, etc etc
-       Task<IEnumerable<City>> GetCities();
+        Task<IEnumerable<City>> Read();
+        Task<City?> Read(int cityId, bool includePointsOfInterest);
+        Task<IEnumerable<PointsOfInterest>> ReadPointsOfInterestForCity(int cityId);
+        Task<PointsOfInterest?> ReadPointsOfInterestForCity(int cityId, int pointsOfInterestId);
+
     }
 }
