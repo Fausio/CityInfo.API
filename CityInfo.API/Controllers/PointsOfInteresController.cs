@@ -34,7 +34,7 @@ namespace CityInfo.API.Controllers
                 return NotFound();
             }
 
-            var result = _cityRepository.ReadPointsOfInterestForCity(CityId);
+            var result = await _cityRepository.ReadPointsOfInterestForCity(CityId);
             return Ok(_mapper.Map<IEnumerable<PointsOfInterest>, IEnumerable<PointsOfInterestDTO>>(result));
         }
 
@@ -56,7 +56,7 @@ namespace CityInfo.API.Controllers
             return Ok(_mapper.Map<PointsOfInterestDTO>(result));
         }
 
-        [HttpPost]
+        //[HttpPost]
         //public ActionResult Create(int CityId, [FromBody] PointsOfInterestCreateDTO pointsOfInterestCreate)
         //{
         //    CityDTO CityIdresult = CitiesDataStore.Instance.Cities.FirstOrDefault(x => x.Id == CityId);
@@ -111,4 +111,4 @@ namespace CityInfo.API.Controllers
 
         //}
     }
-}
+} 
