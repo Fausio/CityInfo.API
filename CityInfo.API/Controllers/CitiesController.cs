@@ -2,6 +2,8 @@
 using CityInfo.DOMAIN.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using CityInfo.SERVICE.Repository.Interfaces;
+using AutoMapper;
+using CityInfo.DOMAIN.Models;
 
 namespace CityInfo.API.Controllers
 {
@@ -10,45 +12,41 @@ namespace CityInfo.API.Controllers
     public class CitiesController : ControllerBase
     {
         private readonly ICityRepository _cityRepository;
-        public CitiesController(ICityRepository cityRepository)
+        private readonly IMapper _mapper;
+        public CitiesController(ICityRepository cityRepository, IMapper mapper)
         {
             this._cityRepository = cityRepository ?? throw new ArgumentNullException(nameof(ICityRepository));
+            this._mapper = mapper ?? throw new ArgumentNullException(nameof(IMapper));
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CityDTOWithoutPointsOfInterest>>> Read()
         {
-            var result = await _cityRepository.Read();
-            var resultTDTO = new List<CityDTOWithoutPointsOfInterest>();
+            var Modelresult = await _cityRepository.Read();
+            var DTOresult = _mapper.Map<IEnumerable<City>, IEnumerable<CityDTOWithoutPointsOfInterest>>(Modelresult);
 
-            if (result.Any())
-            {
-                resultTDTO.AddRange(
-                                      result.Select(city => new CityDTOWithoutPointsOfInterest()
-                                      {
-                                          Id = city.Id,
-                                          Name = city.Name,
-                                          Description = city.Description
-                                      })
-                                    );
-            }
-             
-            return Ok(resultTDTO);
+            return Ok(DTOresult);
         }
 
-        [HttpGet("{Id}")]
-        public ActionResult<CityDTO> Read(int Id)
+     //   [HttpGet("{Id},{includePointsOfInterest}")]
+       [HttpGet("{Id}")]
+        public async Task<IActionResult> Read(int Id, bool includePointsOfInterest = false)
         {
-
-            CityDTO result = CitiesDataStore.Instance.Cities.FirstOrDefault(x => x.Id == Id);
-
+            var result = await _cityRepository.Read(Id, includePointsOfInterest);
+           
             if (result is null)
             {
                 return NotFound();
             }
 
-
-            return Ok(result);
+            if (includePointsOfInterest)
+            {
+                return Ok(_mapper.Map<CityDTO>(result));
+            }
+            else
+            {
+                return Ok(_mapper.Map<CityDTOWithoutPointsOfInterest>(result));
+            } 
         }
     }
 }

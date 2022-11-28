@@ -11,6 +11,7 @@ namespace CityInfo.SERVICE.Repository.Interfaces
     {
         // IQueryable: you can order by, make where, etc etc
         Task<IEnumerable<City>> Read();
+        Task<bool> ReadExists(int cityId);
         Task<City?> Read(int cityId, bool includePointsOfInterest);
         Task<IEnumerable<PointsOfInterest>> ReadPointsOfInterestForCity(int cityId);
         Task<PointsOfInterest?> ReadPointsOfInterestForCity(int cityId, int pointsOfInterestId);

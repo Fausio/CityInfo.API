@@ -36,17 +36,19 @@ namespace CityInfo.SERVICE.Repository.Services
             return await _db.Cities.FirstOrDefaultAsync(c => c.Id == cityId);
         }
 
+        public async Task<bool> ReadExists(int cityId) => await _db.Cities.AnyAsync(c => c.Id == cityId);
+
         public async Task<IEnumerable<PointsOfInterest>> ReadPointsOfInterestForCity(int cityId)
         {
             return await _db.PointsOfInterests.Where(p => p.CityId == cityId)
                                               .OrderBy(c => c.Name)
                                               .ToListAsync();
         }
-         
+
         public async Task<PointsOfInterest?> ReadPointsOfInterestForCity(int cityId, int pointsOfInterestId)
         {
             return await _db.PointsOfInterests.FirstOrDefaultAsync(p => p.CityId == cityId && p.Id == pointsOfInterestId);
-                                    
+
         }
     }
 }

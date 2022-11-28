@@ -37,7 +37,7 @@ builder.Services.AddTransient<IMailServices, CloudMailServices>();
 #endif
 
 builder.Services.AddScoped<ICityRepository, CityRepository>();
-
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain. GetAssemblies());
 
 // get value from appSetting
 var SQLiteConnectionStrings = builder.Configuration["ConnectionStrings:SQLite"];
