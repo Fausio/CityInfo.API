@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CityInfo.DOMAIN.DTOs
 {
-    public class PointsOfInterestÙpdateDTO
+    public class PointsOfInterestUpdateDTO
     {
         [Required(ErrorMessage = "Point of interest name is required")]
         [MaxLength(50)]

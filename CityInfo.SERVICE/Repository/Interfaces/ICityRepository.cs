@@ -16,5 +16,6 @@ namespace CityInfo.SERVICE.Repository.Interfaces
         Task<IEnumerable<PointsOfInterest>> ReadPointsOfInterestForCity(int cityId);
         Task<PointsOfInterest?> ReadPointsOfInterestForCity(int cityId, int pointsOfInterestId);
         Task CreatePointsOfInterest(int cityId, PointsOfInterest model);
+        Task UpdatePointsOfInterest(int cityId, int pointsOfInterestId,PointsOfInterest model);
     }
 }

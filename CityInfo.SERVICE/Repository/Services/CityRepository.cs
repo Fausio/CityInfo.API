@@ -28,10 +28,28 @@ namespace CityInfo.SERVICE.Repository.Services
             }
 
             var modelToSave = await Read(cityId, false);
-            modelToSave.PointsOfInterests.Add(model); 
+            modelToSave.PointsOfInterests.Add(model);
             await _db.SaveChangesAsync();
         }
+        public async Task UpdatePointsOfInterest(int cityId, int pointsOfInterestId, PointsOfInterest model)
+        {
+            if (!await ReadExists(cityId))
+            {
+                throw new Exception($"City with id {cityId} Not Found When update Points Of Interest");
+            }
 
+            var result = await ReadPointsOfInterestForCity(cityId, pointsOfInterestId);
+             
+            if (result is null)
+            {
+                throw new Exception("PointsOfInterests NotFound");
+            } 
+
+            result.Name = model.Name;
+            result.Description = model.Description;
+
+          await  _db.SaveChangesAsync();
+        }
         public async Task<IEnumerable<City>> Read()
         {
             return await _db.Cities.OrderBy(c => c.Name)
@@ -63,5 +81,7 @@ namespace CityInfo.SERVICE.Repository.Services
             return await _db.PointsOfInterests.FirstOrDefaultAsync(p => p.CityId == cityId && p.Id == pointsOfInterestId);
 
         }
+
+
     }
 }
