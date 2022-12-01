@@ -56,36 +56,39 @@ namespace CityInfo.API.Controllers
             return Ok(_mapper.Map<PointsOfInterestDTO>(result));
         }
 
-        //[HttpPost]
-        //public ActionResult Create(int CityId, [FromBody] PointsOfInterestCreateDTO pointsOfInterestCreate)
-        //{
-        //    CityDTO CityIdresult = CitiesDataStore.Instance.Cities.FirstOrDefault(x => x.Id == CityId);
-        //    if (CityIdresult is null)
-        //    {
-        //        return NotFound("City NotFound");
-        //    }
+        [HttpPost]
+        public async Task<ActionResult> Create(int CityId, [FromBody] PointsOfInterestCreateDTO pointsOfInterestCreate)
+        {
+            
+            if (await  _cityRepository.ReadExists(CityId))
+            {
+                _logger.LogInformation($"City with id {CityId}, not found when creating point of interest.");
+                return NotFound("City NotFound");
+            }
+              
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("ModelState is not IsValid");
+            }
 
+            //var NewpointsOfInterestCreate = new PointsOfInterestDTO()
+            //{
+            //    Id = CitiesDataStore.Instance.Cities.SelectMany(points => points.PointsOfInterests).Max(p => p.Id) + 1,
+            //    Name = pointsOfInterestCreate.Name,
+            //    Description = pointsOfInterestCreate.Description
+            //};
 
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest("ModelState is not IsValid");
-        //    }
+            var model = _mapper.Map<PointsOfInterest>(pointsOfInterestCreate);
+            await _cityRepository.Read()
 
-        //    var NewpointsOfInterestCreate = new PointsOfInterestDTO()
-        //    {
-        //        Id = CitiesDataStore.Instance.Cities.SelectMany(points => points.PointsOfInterests).Max(p => p.Id) + 1,
-        //        Name = pointsOfInterestCreate.Name,
-        //        Description = pointsOfInterestCreate.Description
-        //    };
+            return CreatedAtRoute("ReadPointOfInterest", new
+            {
+                CityId = CityIdresult.Id,
+                PointOfInterestId = NewpointsOfInterestCreate.Id
+            }, NewpointsOfInterestCreate);
 
-        //    CityIdresult.PointsOfInterests.Add(NewpointsOfInterestCreate);
-
-        //    return CreatedAtRoute("ReadPointOfInterest", new
-        //    {
-        //        CityId = CityIdresult.Id,
-        //        PointOfInterestId = NewpointsOfInterestCreate.Id
-        //    }, NewpointsOfInterestCreate);
-        //}
+            
+        }
 
 
         //[HttpPut("{PointOfInterestId}")]
