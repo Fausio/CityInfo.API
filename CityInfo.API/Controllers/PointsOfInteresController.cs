@@ -28,7 +28,7 @@ namespace CityInfo.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PointsOfInterestDTO>>> Read(int CityId)
         {
-            if (await _cityRepository.ReadExists(CityId))
+            if (!await _cityRepository.ReadExists(CityId))
             {
                 _logger.LogInformation($"City with id {CityId}, not found when accessing point of interest.");
                 return NotFound();
@@ -41,7 +41,7 @@ namespace CityInfo.API.Controllers
         [HttpGet("{PointOfInterestId}", Name = "ReadPointOfInterest")]
         public async Task<ActionResult<PointsOfInterestDTO>> Read(int CityId, int PointOfInterestId)
         {
-            if (await _cityRepository.ReadExists(CityId))
+            if (!await _cityRepository.ReadExists(CityId))
             {
                 _logger.LogInformation($"City with id {CityId}, not found when accessing point of interest.");
                 return NotFound();
@@ -60,7 +60,7 @@ namespace CityInfo.API.Controllers
         public async Task<ActionResult> Create(int CityId, [FromBody] PointsOfInterestCreateDTO pointsOfInterestCreate)
         {
             
-            if (await  _cityRepository.ReadExists(CityId))
+            if (!await  _cityRepository.ReadExists(CityId))
             {
                 _logger.LogInformation($"City with id {CityId}, not found when creating point of interest.");
                 return NotFound("City NotFound");
@@ -78,14 +78,15 @@ namespace CityInfo.API.Controllers
             //    Description = pointsOfInterestCreate.Description
             //};
 
-            var model = _mapper.Map<PointsOfInterest>(pointsOfInterestCreate);
-            await _cityRepository.Read()
+            var model = _mapper.Map<PointsOfInterestCreateDTO,PointsOfInterest>(pointsOfInterestCreate);
+            await _cityRepository.CreatePointsOfInterest(CityId, model);
+          //  await _cityRepository.Read();
 
             return CreatedAtRoute("ReadPointOfInterest", new
             {
-                CityId = CityIdresult.Id,
-                PointOfInterestId = NewpointsOfInterestCreate.Id
-            }, NewpointsOfInterestCreate);
+                CityId = CityId,
+                PointOfInterestId = model.Id
+            }, pointsOfInterestCreate);
 
             
         }

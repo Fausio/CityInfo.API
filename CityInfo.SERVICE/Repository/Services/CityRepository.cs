@@ -19,6 +19,19 @@ namespace CityInfo.SERVICE.Repository.Services
             this._db = appDb;
         }
 
+        public async Task CreatePointsOfInterest(int cityId, PointsOfInterest model)
+        {
+
+            if (!await ReadExists(cityId))
+            {
+                throw new Exception($"City with id {cityId} Not Found When create Points Of Interest");
+            }
+
+            var modelToSave = await Read(cityId, false);
+            modelToSave.PointsOfInterests.Add(model); 
+            await _db.SaveChangesAsync();
+        }
+
         public async Task<IEnumerable<City>> Read()
         {
             return await _db.Cities.OrderBy(c => c.Name)

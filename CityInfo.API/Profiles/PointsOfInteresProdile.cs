@@ -4,11 +4,12 @@ using CityInfo.DOMAIN.Models;
 
 namespace CityInfo.API.Profiles
 {
-    public class PointsOfInteresProdile: Profile
+    public class PointsOfInteresProdile : Profile
     {
         public PointsOfInteresProdile()
         {
             CreateMap<PointsOfInterest, PointsOfInterestDTO>();
+            CreateMap<PointsOfInterestCreateDTO, PointsOfInterest>();
         }
     }
 }
