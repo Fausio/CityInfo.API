@@ -39,16 +39,16 @@ namespace CityInfo.SERVICE.Repository.Services
             }
 
             var result = await ReadPointsOfInterestForCity(cityId, pointsOfInterestId);
-             
+
             if (result is null)
             {
                 throw new Exception("PointsOfInterests NotFound");
-            } 
+            }
 
             result.Name = model.Name;
             result.Description = model.Description;
 
-          await  _db.SaveChangesAsync();
+            await _db.SaveChangesAsync();
         }
         public async Task<IEnumerable<City>> Read()
         {
@@ -82,6 +82,9 @@ namespace CityInfo.SERVICE.Repository.Services
 
         }
 
-
+        public async Task<int> SaveChangesAsync()
+        {
+            return await _db.SaveChangesAsync();
+        }
     }
 }

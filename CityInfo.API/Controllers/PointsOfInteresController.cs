@@ -88,7 +88,24 @@ namespace CityInfo.API.Controllers
         public async Task<ActionResult> Update(int CityId, int PointOfInterestId, PointsOfInterestCreateDTO pointsOfInterestUpdate)
         { 
             await _cityRepository.UpdatePointsOfInterest(CityId, PointOfInterestId, _mapper.Map<PointsOfInterest>(pointsOfInterestUpdate));
-             
+
+            if (!await _cityRepository.ReadExists(CityId))
+            {
+                throw new Exception($"City with id {CityId} Not Found When update Points Of Interest");
+            }
+
+            var result = await _cityRepository.ReadPointsOfInterestForCity(CityId, PointOfInterestId);
+
+            if (result is null)
+            {
+                throw new Exception("PointsOfInterests NotFound");
+            }
+
+            _mapper.Map(pointsOfInterestUpdate, result);
+
+            await _cityRepository.SaveChangesAsync();
+
+
             return NoContent();
 
         }
