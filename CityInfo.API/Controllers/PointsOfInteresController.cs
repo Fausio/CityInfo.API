@@ -4,6 +4,7 @@ using CityInfo.DOMAIN.DTOs;
 using CityInfo.DOMAIN.Models;
 using CityInfo.SERVICE.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CityInfo.API.Controllers
@@ -83,11 +84,10 @@ namespace CityInfo.API.Controllers
 
         }
 
-
         [HttpPut("{PointOfInterestId}")]
         public async Task<ActionResult> Update(int CityId, int PointOfInterestId, PointsOfInterestCreateDTO pointsOfInterestUpdate)
-        { 
-            await _cityRepository.UpdatePointsOfInterest(CityId, PointOfInterestId, _mapper.Map<PointsOfInterest>(pointsOfInterestUpdate));
+        {
+          // await _cityRepository.UpdatePointsOfInterest(CityId, PointOfInterestId, _mapper.Map<PointsOfInterest>(pointsOfInterestUpdate));
 
             if (!await _cityRepository.ReadExists(CityId))
             {
@@ -109,5 +109,53 @@ namespace CityInfo.API.Controllers
             return NoContent();
 
         }
+
+
+        [HttpPatch("{PointOfInterestId}")]
+        public async Task< ActionResult> UpdatePartial(int CityId,
+            int PointOfInterestId,
+            JsonPatchDocument<PointsOfInterestUpdateDTO> patchDocment)
+        {
+            if (!await _cityRepository.ReadExists(CityId))
+            {
+                throw new Exception($"City with id {CityId} Not Found When update Points Of Interest");
+            }
+
+            var result = await _cityRepository.ReadPointsOfInterestForCity(CityId, PointOfInterestId); 
+            if (result is null)
+            {
+                throw new Exception("PointsOfInterests NotFound");
+            }
+
+            //var modelPatch = new PointsOfInterestUpdateDTO
+            //{
+            //    Name = result.Name,
+            //    Description = result.Description
+            //};
+            var modelPatch = _mapper.Map<PointsOfInterestUpdateDTO>(result);
+
+             
+            patchDocment.ApplyTo(modelPatch, ModelState);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!TryValidateModel(modelPatch))
+            {
+                return BadRequest(ModelState);
+            }
+
+            _mapper.Map(modelPatch,result);
+            await _cityRepository.SaveChangesAsync();
+
+         
+
+            return NoContent();
+        }
+
+
+
     }
 }
