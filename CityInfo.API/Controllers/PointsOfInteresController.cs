@@ -87,7 +87,7 @@ namespace CityInfo.API.Controllers
         [HttpPut("{PointOfInterestId}")]
         public async Task<ActionResult> Update(int CityId, int PointOfInterestId, PointsOfInterestCreateDTO pointsOfInterestUpdate)
         {
-          // await _cityRepository.UpdatePointsOfInterest(CityId, PointOfInterestId, _mapper.Map<PointsOfInterest>(pointsOfInterestUpdate));
+            // await _cityRepository.UpdatePointsOfInterest(CityId, PointOfInterestId, _mapper.Map<PointsOfInterest>(pointsOfInterestUpdate));
 
             if (!await _cityRepository.ReadExists(CityId))
             {
@@ -112,7 +112,7 @@ namespace CityInfo.API.Controllers
 
 
         [HttpPatch("{PointOfInterestId}")]
-        public async Task< ActionResult> UpdatePartial(int CityId,
+        public async Task<ActionResult> UpdatePartial(int CityId,
             int PointOfInterestId,
             JsonPatchDocument<PointsOfInterestUpdateDTO> patchDocment)
         {
@@ -121,7 +121,7 @@ namespace CityInfo.API.Controllers
                 throw new Exception($"City with id {CityId} Not Found When update Points Of Interest");
             }
 
-            var result = await _cityRepository.ReadPointsOfInterestForCity(CityId, PointOfInterestId); 
+            var result = await _cityRepository.ReadPointsOfInterestForCity(CityId, PointOfInterestId);
             if (result is null)
             {
                 throw new Exception("PointsOfInterests NotFound");
@@ -134,7 +134,7 @@ namespace CityInfo.API.Controllers
             //};
             var modelPatch = _mapper.Map<PointsOfInterestUpdateDTO>(result);
 
-             
+
             patchDocment.ApplyTo(modelPatch, ModelState);
 
             if (!ModelState.IsValid)
@@ -147,15 +147,23 @@ namespace CityInfo.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            _mapper.Map(modelPatch,result);
+            _mapper.Map(modelPatch, result);
             await _cityRepository.SaveChangesAsync();
 
-         
+
 
             return NoContent();
         }
 
 
+        [HttpDelete("{PointOfInterestId}")]
+        public async Task<ActionResult> Delete(int CityId, int PointOfInterestId)
+        {
+
+
+            await _cityRepository.DeletePointsOfInterests(CityId,PointOfInterestId);
+            return NoContent();
+        }
 
     }
 }

@@ -86,5 +86,23 @@ namespace CityInfo.SERVICE.Repository.Services
         {
             return await _db.SaveChangesAsync();
         }
+
+        public async Task DeletePointsOfInterests(int cityId, int includePointsOfInterestId)
+        {
+
+            if (!await ReadExists(cityId))
+            {
+                throw new Exception($"City with id {cityId} Not Found When delete Points Of Interest");
+            }
+
+            var result = await ReadPointsOfInterestForCity(cityId, includePointsOfInterestId);
+            if (result is null)
+            {
+                throw new Exception("PointsOfInterests NotFound");
+            }
+
+            _db.PointsOfInterests.Remove(result);
+            await SaveChangesAsync();
+        }
     }
 }

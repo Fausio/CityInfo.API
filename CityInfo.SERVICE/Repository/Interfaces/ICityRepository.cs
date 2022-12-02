@@ -9,6 +9,8 @@ namespace CityInfo.SERVICE.Repository.Interfaces
 {
     public interface ICityRepository
     {
+        Task DeletePointsOfInterests(int cityId, int includePointsOfInterestId);
+
         // IQueryable: you can order by, make where, etc etc
         Task<IEnumerable<City>> Read();
         Task<bool> ReadExists(int cityId);
