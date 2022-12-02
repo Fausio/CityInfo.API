@@ -20,9 +20,9 @@ namespace CityInfo.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CityDTOWithoutPointsOfInterest>>> Read()
+        public async Task<ActionResult<IEnumerable<CityDTOWithoutPointsOfInterest>>> Read([FromQuery(Name ="name")]string? name)
         {
-            var Modelresult = await _cityRepository.Read();
+            var Modelresult = await _cityRepository.Read(name);
             var DTOresult = _mapper.Map<IEnumerable<City>, IEnumerable<CityDTOWithoutPointsOfInterest>>(Modelresult);
 
             return Ok(DTOresult);

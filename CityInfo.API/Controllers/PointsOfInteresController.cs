@@ -159,10 +159,18 @@ namespace CityInfo.API.Controllers
         [HttpDelete("{PointOfInterestId}")]
         public async Task<ActionResult> Delete(int CityId, int PointOfInterestId)
         {
+            try
+            {
+                await _cityRepository.DeletePointsOfInterests(CityId, PointOfInterestId);
+                return NoContent();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
 
 
-            await _cityRepository.DeletePointsOfInterests(CityId,PointOfInterestId);
-            return NoContent();
         }
 
     }

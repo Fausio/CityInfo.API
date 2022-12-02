@@ -104,5 +104,20 @@ namespace CityInfo.SERVICE.Repository.Services
             _db.PointsOfInterests.Remove(result);
             await SaveChangesAsync();
         }
+
+        public async Task<IEnumerable<City>> Read(string? name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return await Read();
+            }
+
+            name = name.Trim();
+
+            return await _db.Cities
+                .Where(c => c.Name == name)
+                .OrderBy(c => c.Name)
+                .ToListAsync();
+        }
     }
 }
