@@ -20,20 +20,20 @@ namespace CityInfo.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CityDTOWithoutPointsOfInterest>>> Read([FromQuery(Name ="name")]string? name)
+        public async Task<ActionResult<IEnumerable<CityDTOWithoutPointsOfInterest>>> Read(string? name, string? search)
         {
-            var Modelresult = await _cityRepository.Read(name);
+            var Modelresult = await _cityRepository.Read(name,search);
             var DTOresult = _mapper.Map<IEnumerable<City>, IEnumerable<CityDTOWithoutPointsOfInterest>>(Modelresult);
 
             return Ok(DTOresult);
         }
 
-     //   [HttpGet("{Id},{includePointsOfInterest}")]
-       [HttpGet("{Id}")]
+        //   [HttpGet("{Id},{includePointsOfInterest}")]
+        [HttpGet("{Id}")]
         public async Task<IActionResult> Read(int Id, bool includePointsOfInterest = false)
         {
             var result = await _cityRepository.Read(Id, includePointsOfInterest);
-           
+
             if (result is null)
             {
                 return NotFound();
@@ -46,7 +46,7 @@ namespace CityInfo.API.Controllers
             else
             {
                 return Ok(_mapper.Map<CityDTOWithoutPointsOfInterest>(result));
-            } 
+            }
         }
     }
 }

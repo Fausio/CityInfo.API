@@ -105,19 +105,28 @@ namespace CityInfo.SERVICE.Repository.Services
             await SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<City>> Read(string? name)
+        public async Task<IEnumerable<City>> Read(string? name, string? search)
         {
-            if (string.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(name) && string.IsNullOrWhiteSpace(search))
             {
                 return await Read();
             }
 
-            name = name.Trim();
+            var result = _db.Cities as IQueryable<City>;
 
-            return await _db.Cities
-                .Where(c => c.Name == name)
-                .OrderBy(c => c.Name)
-                .ToListAsync();
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                name = name.Trim();
+                result = result.Where(c => c.Name == name);
+            }
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.Trim();
+                result = result.Where(c => c.Name.Contains(search) || c.Description != null && c.Description.Contains(search));
+            } 
+
+            return await result.OrderBy(c => c.Name)  .ToListAsync();
         }
     }
 }
