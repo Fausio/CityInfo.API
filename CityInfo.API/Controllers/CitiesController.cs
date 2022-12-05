@@ -13,6 +13,7 @@ namespace CityInfo.API.Controllers
     {
         private readonly ICityRepository _cityRepository;
         private readonly IMapper _mapper;
+        private   int PAGE_SIZE = 10;
         public CitiesController(ICityRepository cityRepository, IMapper mapper)
         {
             this._cityRepository = cityRepository ?? throw new ArgumentNullException(nameof(ICityRepository));
@@ -20,9 +21,19 @@ namespace CityInfo.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CityDTOWithoutPointsOfInterest>>> Read(string? name, string? search)
+        public async Task<ActionResult<IEnumerable<CityDTOWithoutPointsOfInterest>>> Read(string? name, 
+                                                                                          string? search, 
+                                                                                          int PAGE_NUMBER = 1,
+                                                                                          int PAGE_SIZE = 10 )
         {
-            var Modelresult = await _cityRepository.Read(name,search);
+            // to insure  max size of page
+            if (PAGE_SIZE > this.PAGE_SIZE)
+            {
+                PAGE_SIZE = this.PAGE_SIZE;
+            }
+
+
+            var Modelresult = await _cityRepository.Read(name,search, PAGE_NUMBER, PAGE_SIZE);
             var DTOresult = _mapper.Map<IEnumerable<City>, IEnumerable<CityDTOWithoutPointsOfInterest>>(Modelresult);
 
             return Ok(DTOresult);
