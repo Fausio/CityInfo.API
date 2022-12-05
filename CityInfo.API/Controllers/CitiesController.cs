@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using CityInfo.SERVICE.Repository.Interfaces;
 using AutoMapper;
 using CityInfo.DOMAIN.Models;
+using System.Text.Json;
 
 namespace CityInfo.API.Controllers
 {
@@ -33,7 +34,10 @@ namespace CityInfo.API.Controllers
             }
 
 
-            var Modelresult = await _cityRepository.Read(name,search, PAGE_NUMBER, PAGE_SIZE);
+            var (Modelresult, paginationMetadata) = await _cityRepository.Read(name,search, PAGE_NUMBER, PAGE_SIZE);
+
+            Response.Headers.Add("x-pagination", JsonSerializer.Serialize(paginationMetadata));
+
             var DTOresult = _mapper.Map<IEnumerable<City>, IEnumerable<CityDTOWithoutPointsOfInterest>>(Modelresult);
 
             return Ok(DTOresult);

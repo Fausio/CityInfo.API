@@ -1,4 +1,5 @@
-﻿using CityInfo.DOMAIN.Models;
+﻿using CityInfo.DOMAIN.Helpers;
+using CityInfo.DOMAIN.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace CityInfo.SERVICE.Repository.Interfaces
 
         // IQueryable: you can order by, make where, etc etc
         Task<IEnumerable<City>> Read();
-        Task<IEnumerable<City>> Read(string? name,string? search,int PAGE_NUMBER,int PAGE_SIZE);
+        Task<(IEnumerable<City>, PaginationMetadata)> Read(string? name,string? search,int PAGE_NUMBER,int PAGE_SIZE);
         Task<bool> ReadExists(int cityId);
         Task<City?> Read(int cityId, bool includePointsOfInterest);
 

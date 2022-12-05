@@ -1,4 +1,5 @@
 ﻿using CityInfo.DATA.DbContext;
+using CityInfo.DOMAIN.Helpers;
 using CityInfo.DOMAIN.Models;
 using CityInfo.SERVICE.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -105,12 +106,8 @@ namespace CityInfo.SERVICE.Repository.Services
             await SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<City>> Read(string? name, string? search ,int PAGE_NUMBER, int PAGE_SIZE)
+        public async Task<(IEnumerable<City>, PaginationMetadata)> Read(string? name, string? search, int PAGE_NUMBER, int PAGE_SIZE)
         {
-            //if (string.IsNullOrWhiteSpace(name) && string.IsNullOrWhiteSpace(search))
-            //{
-            //    return await Read();
-            //}
 
             var result = _db.Cities as IQueryable<City>;
 
@@ -124,12 +121,18 @@ namespace CityInfo.SERVICE.Repository.Services
             {
                 search = search.Trim();
                 result = result.Where(c => c.Name.Contains(search) || c.Description != null && c.Description.Contains(search));
-            } 
+            }
 
-            return await result.OrderBy(c => c.Name)  
-                               .Skip(PAGE_SIZE * (PAGE_NUMBER - 1))       
+            var totalItemCount = await _db.Cities.CountAsync();
+            var paginationMetadata = new PaginationMetadata(totalItemCount, PAGE_SIZE, PAGE_NUMBER);
+
+
+            var CiiesResult = await result.OrderBy(c => c.Name)
+                               .Skip(PAGE_SIZE * (PAGE_NUMBER - 1))
                                .Take(PAGE_SIZE)
                                .ToListAsync();
+
+            return (CiiesResult, paginationMetadata);
         }
     }
 }
