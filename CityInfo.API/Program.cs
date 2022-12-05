@@ -5,7 +5,9 @@ using CityInfo.SERVICE.Repository.Services;
 using CityInfo.SERVICE.Services;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,16 +39,32 @@ builder.Services.AddTransient<IMailServices, CloudMailServices>();
 #endif
 
 builder.Services.AddScoped<ICityRepository, CityRepository>();
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain. GetAssemblies());
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // get value from appSetting
 var SQLiteConnectionStrings = builder.Configuration["ConnectionStrings:SQLite"];
-builder.Services.AddDbContext<AppDbContext>( dbContextOptions => dbContextOptions.UseSqlite(SQLiteConnectionStrings));
+builder.Services.AddDbContext<AppDbContext>(dbContextOptions => dbContextOptions.UseSqlite(SQLiteConnectionStrings));
 //using (var db = new AppDbContext(new DbContextOptions<AppDbContext>()))
 //{
 //    //db.Database.EnsureCreated(); Don't use
 //    db.Database.Migrate();
 //}
+
+builder.Services.AddAuthentication("Bearer")
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new()
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateIssuerSigningKey = true,
+
+                        ValidIssuer = builder.Configuration["Authentication:Issuer"],
+                        ValidAudience = builder.Configuration["Authentication:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["Authentication:SecretForkey"]))
+
+                    };
+                });
 
 var app = builder.Build();
 
@@ -60,7 +78,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseEndpoints(endpoints => endpoints.MapControllers());

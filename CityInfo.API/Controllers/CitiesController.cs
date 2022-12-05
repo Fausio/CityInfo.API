@@ -5,11 +5,13 @@ using CityInfo.SERVICE.Repository.Interfaces;
 using AutoMapper;
 using CityInfo.DOMAIN.Models;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CityInfo.API.Controllers
 {
     [ApiController]
     [Route("api/Cities")]
+    [Authorize]
     public class CitiesController : ControllerBase
     {
         private readonly ICityRepository _cityRepository;
