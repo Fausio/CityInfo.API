@@ -29,7 +29,7 @@ namespace CityInfo.API.Controllers
         {
             // to insure  max size of page
             if (PAGE_SIZE > this.PAGE_SIZE)
-            {
+            { 
                 PAGE_SIZE = this.PAGE_SIZE;
             }
 
