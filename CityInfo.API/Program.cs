@@ -3,6 +3,7 @@ using CityInfo.SERVICE.Interfaces;
 using CityInfo.SERVICE.Repository.Interfaces;
 using CityInfo.SERVICE.Repository.Services;
 using CityInfo.SERVICE.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -65,6 +66,13 @@ builder.Services.AddAuthentication("Bearer")
 
                     };
                 });
+
+builder.Services.AddApiVersioning(setup =>
+{
+    setup.AssumeDefaultVersionWhenUnspecified = true;
+    setup.DefaultApiVersion = new ApiVersion(1, 0);
+    setup.ReportApiVersions = true;
+});
 
 var app = builder.Build();
 
