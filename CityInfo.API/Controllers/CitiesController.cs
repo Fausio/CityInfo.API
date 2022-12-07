@@ -11,7 +11,7 @@ namespace CityInfo.API.Controllers
 {
     [ApiController]
     [Route("api/Cities")]
-    [Authorize]
+    //[Authorize]
     public class CitiesController : ControllerBase
     {
         private readonly ICityRepository _cityRepository;
