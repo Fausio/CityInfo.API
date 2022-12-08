@@ -3,14 +3,18 @@ using CityInfo.DATA;
 using CityInfo.DOMAIN.DTOs;
 using CityInfo.DOMAIN.Models;
 using CityInfo.SERVICE.Repository.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CityInfo.API.Controllers
 {
-    [Route("api/Cities/{CityId}/pointsofinterest")]
+    [Route("api/v{version:apiVersion}/Cities/{CityId}/pointsofinterest")]
+    [ApiVersion("1.0")]
+    [ApiVersion("2.0")]
     [ApiController]
+    [Authorize]
     public class PointsOfInteresController : ControllerBase
     {
         private readonly ILogger<PointsOfInteresController> _logger;
